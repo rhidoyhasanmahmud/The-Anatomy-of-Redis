@@ -38,4 +38,4 @@
     - Automatic partitioning with Redis Cluster.
     - Automatic failover
 
-**[⬆ Back to Top](#table-of-contents)**
+   **[⬆ Back to Top](#table-of-contents)**
