@@ -31,7 +31,8 @@
 |21  | [List Operation In Redis](#List-Operation-In-Redis)|
 |22  | [Hash Operation In Redis](#Hash-Operation-In-Redis)|
 |23  | [Redis Clustering in a Nutshell](#Redis-Clustering-in-a-Nutshell)|
-|24  | [Project - 01 : Redis Cache With SpringBoot](#Redis-Cache-With-SpringBoot)|
+|24  | [Project - 01 : Redis Cache With SpringBoot Project](#Redis-Cache-With-SpringBoot)|
+|24  | [Project - 02 : Redis Cache With SpringBoot Project](#Redis-Cache-With-SpringBoot-Project)|
 
 ## Core Message broker - Redis
 
@@ -1223,10 +1224,19 @@ According to Redis.io, there are many languages supported by the Redis including
 
 - The possibility of Data loss
 
+**[⬆ Back to Top](#table-of-contents)**
+
 24. ### Redis Cache With SpringBoot
 
 [Redis-Cache-With-SpringBoot-Project-Source-Code](https://github.com/CodeMechanix/Redis-Interview-Questions/tree/main/Project/Redis-Cache-With-SpringBoot)
 
+**[⬆ Back to Top](#table-of-contents)**
+
+25. ### Redis Cache With SpringBoot Project
+
+[Redis-Cache-With-SpringBoot-Project-Source-Code](https://github.com/CodeMechanix/Redis-Interview-Questions/tree/main/Project/Redis-Cache-With-SpringBoot)
+
+**[⬆ Back to Top](#table-of-contents)**
 
 
 
