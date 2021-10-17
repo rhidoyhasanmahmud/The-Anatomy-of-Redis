@@ -362,6 +362,7 @@ far as possible without requiring you to define a schema.
 
 TL;DR - Use Redis if performance is important , and you are willing to spend time optimizing and organizing your data. -
 Use MongoDB if you need to build a prototype without worrying too much about your DB.
+
 -------
 Redis is an in memory data store, that can persist it's state to disk (to enable recovery after restart). However, being
 an in-memory data store means the size of the data store (on a single node) cannot exceed the total memory space on the
@@ -389,6 +390,7 @@ MongoDB on the other hand, is a document database. It's a good option for keepin
 almost anything you do with databases except transactions.For example if you wanna develop a blog or social network,
 MongoDB is a proper choice. It's scalable with scale-out strategy. It uses disk as storage media, so data would be
 persisted.
+
 ---------
 **[⬆ Back to Top](#table-of-contents)**
 
