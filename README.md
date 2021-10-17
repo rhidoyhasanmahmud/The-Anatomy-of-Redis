@@ -1136,7 +1136,7 @@ So does how this ensures the high availability or what happens in a failover sce
 
 Let's say B had some internal issues and stopped working. Others in the cluster will get to know it by the “Gossip Port” since they run node-to-node communication (including health checks) through this port. Then A and C does voting and, will promote one of the B’s replicas to be a Master. In this example, since we have only B1, it will be promoted to be the new master. If the B rejoins the cluster, it has to be a slave, not a master.
 
-![Failover Scenario in Redis - Image - 1]()
+![Failover Scenario in Redis - Image - 1](https://github.com/CodeMechanix/Redis-Interview-Questions/blob/main/images/image_01.gif)
 
 In a nutshell, even if the B fails as a master, since its slave takes his position and does his work, the cluster does not fail. Hence, it ensures maximum availability as well.
 
@@ -1158,7 +1158,7 @@ What if, A fails after the acknowledgment is sent, but before writing to the sla
 
 Note that, replication process can be configured to be synchronous via WAIT command. However, that also does not guarantee 100% consistency. Instead, it will make it degrade in performance aspects. But in case the consistency is very crucial to you, there are commercial solutions available like SOSS (ScaleOut State Server) or Amazon ElastiCache, which are In-Memory Data Grid (IMDG) implementations that guarantee no loss of data.
 
-![Asynchronous Replication Data Loss - Image - 2]()
+![Asynchronous Replication Data Loss - Image - 2](https://github.com/CodeMechanix/Redis-Interview-Questions/blob/main/images/image_02.gif)
 
 > Network Partitioning Scenario
 
@@ -1199,13 +1199,13 @@ In practice, both of these methods are being used in industry; sometimes, both t
 - Performance (Speed):
 Since Redis is In-memory, it reduces the overhead in accessing the Disk to retrieve data, since it requests from disk only when the data is not available in Redis cache.
 
-![How Redis improve performance by minimizing disk reads - Image 3]()
+![How Redis improve performance by minimizing disk reads - Image 3](https://github.com/CodeMechanix/Redis-Interview-Questions/blob/main/images/image_03.png)
 
 There are some other options which are available in Redis for performance optimization. For example, pipelining feature which clusters multiple commands and sends them at once to the cluster.
 
 Another mechanism in achieving high performance is the architectural design of the cluster. For example, have a look at the bellow architecture which optimizes the performance in a caching use case.
 
-![Architecture to maximize performance - image 4]()
+![Architecture to maximize performance - image 4](https://github.com/CodeMechanix/Redis-Interview-Questions/blob/main/images/image_04.png)
 
 - Durability :
 
