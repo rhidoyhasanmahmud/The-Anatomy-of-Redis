@@ -23,6 +23,9 @@
 |13  | [When to use Redis over MongoDB?](#When-to-use-Redis-over-MongoDB)
 |14  | [How are Redis pipelining and transaction different?](How-are-Redis-pipelining-and-transaction-different)
 |15  | [Does Redis support transactions?](#Does-Redis-support-transactions)
+|16  | [Are redis operations on data structures thread safe?](#Are-redis-operations-on-data-structures-thread-safe)
+|17  | [Redis replication and redis sharding (cluster) difference](#Redis-replication-and-redis-sharding-difference)
+|18  | [What is Pipelining in Redis and when to use one?](#What-is-Pipelining-in-Redis-and-when-to-use-one)
 
 ## Core Message broker - Redis
 
@@ -425,6 +428,72 @@ catching the exception) you can achieve your requirement in this way.
 4. EXEC/DISCARD In the
 
 4th step do EXEC if there is no error, if you encounter an error or exception and you wanna rollback do DISCARD.
+
+**[⬆ Back to Top](#table-of-contents)**
+
+16. ### Are redis operations on data structures thread safe?
+
+You might not know it, but Redis is actually single-threaded, which is how every command is guaranteed to be atomic.
+While one command is executing, no other command will run.
+
+**[⬆ Back to Top](#table-of-contents)**
+
+17. ### Redis replication and redis sharding difference
+
+Sharding, also known as partitioning, is splitting the data up by key; While replication, also known as mirroring, is to
+copy all data.
+
+Sharding is useful to increase performance, reducing the hit and memory load on any one resource. Replication is useful
+for getting a high availability of reads. If you read from multiple replicas, you will also reduce the hit rate on all
+resources, but the memory requirement for all resources remains the same. It should be noted that, while you can write
+to a slave, replication is master->slave only. So you cannot scale writes this way.
+
+Suppose you have the following tuples:
+
+```text
+[1:Apple], 
+[2:Banana], 
+[3:Cherry], 
+[4:Durian]
+```
+
+and we have two machines A and B. With Sharding, we might store keys 2,4 on machine A; and keys 1,3 on machine B. With
+Replication, we store keys 1,2,3,4 on machine A and 1,2,3,4 on machine B.
+
+Sharding is typically implemented by performing a consistent hash upon the key. The above example was implemented with
+the following hash function ->
+
+```text
+h(x){return x%2==0?A:B}.
+```
+
+To combine the concepts, We might replicate each shard. In the above cases, all of the data (2,4) of machine A could be
+replicated on machine C and all of the data (1,3) of machine B could be replicated on machine D.
+
+Any key-value store (of which Redis is only one example) supports sharding, though certain cross-key functions will no
+longer work. Redis supports replication out of the box.
+
+**[⬆ Back to Top](#table-of-contents)**
+
+18. ### What is Pipelining in Redis and when to use one?
+
+Redis is a Transmission Control Protocol (TCP) server which supports request or response protocol. A request is
+completed in 2 steps :
+
+- The client sends query to server in blocking manner to get server response.
+- Then server operates command and sends response back result of query to client.
+
+In pipelining, client can send multiple queries or requests to server without waiting for all replies of queries at all
+and can finally reads replies in single go. In pipelining, client needs reply of read command and then it can call write
+command.
+
+Advantages of Redis Pipelining :
+
+The main advantage of Redis pipelining is to boosting up protocol performance. It improves Redis performance because of
+multiple commands simultaneous execution. The speedup gained by pipelining ranges from factor of 5 for connections to
+localhost up to factor of at least 100 over low speed internet connections.
+
+
 
 **[⬆ Back to Top](#table-of-contents)**
 
