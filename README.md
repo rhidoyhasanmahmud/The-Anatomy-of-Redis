@@ -27,7 +27,7 @@
 |17  | [Redis replication and redis sharding (cluster) difference](#Redis-replication-and-redis-sharding-difference)
 |18  | [What is Pipelining in Redis and when to use one?](#What-is-Pipelining-in-Redis-and-when-to-use-one)
 |19  | [Why use cache?](#Why-use-cache)
-|20  | [StringRedisTemplate vs RedisTemplate](#StringRedisTemplate-vs-RedisTemplate)
+|20  | [StringRedisTemplate vs RedisTemplate  vs Jedis](#StringRedisTemplate-vs-RedisTemplate-vs-Jedis)
 |21  | [List Operation In Redis](#List-Operation-In-Redis)
 
 ## Core Message broker - Redis
@@ -520,7 +520,7 @@ the next page to be a millisecond-level operation.
 
 **[⬆ Back to Top](#table-of-contents)**
 
-21. List Operation In Redis
+21. ### List Operation In Redis
 
 The List in Redis is a simple list of strings. The following are common operations.
 
