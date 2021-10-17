@@ -17,9 +17,9 @@
 |7  | [What's the advantage of Redis vs using memory?](#What-is-the-advantage-of-Redis-vs-using-memory)
 |8  | [When to use Redis Lists data type?](#When-to-use-Redis-Lists-data-type)
 |9  | [When to use Redis String data type?](#When-to-use-Redis-String-data-type)
-|10  | [When to use Redis Set data type?](#When-to-use-Redis-String-data-type)
-|11  | [When to use Redis Sorted Set data type?](#When-to-use-Redis-String-data-type)
-|12  | [When to use Redis Hash data type?](#When-to-use-Redis-String-data-type)
+|10  | [When to use Redis Set data type?](#When-to-use-Redis-Set-data-type)
+|11  | [When to use Redis Sorted Set data type?](#When-to-use-Redis-Sorted-Set-data-type)
+|12  | [When to use Redis Hash data type?](#When-to-use-Redis-Hash-data-type)
 
 ## Core Message broker - Redis
 
