@@ -12,23 +12,24 @@
 |2  | [Why redis cache over Memcached and Redis Implementation?](#Why-redis-cache-over-Memcached-and-Redis-Implementation)|
 |3  | [Use cases of Redis](#Use-cases-of-Redis)|
 |4  | [Redis cache limits](#Redis-cache-limits)|
-|5  | [Is Redis just a cache?](#Is-Redis-just-a-cache)
-|6  | [Does Redis persist data?](#Does-Redis-persist-data)
-|7  | [What's the advantage of Redis vs using memory?](#What-is-the-advantage-of-Redis-vs-using-memory)
-|8  | [When to use Redis Lists data type?](#When-to-use-Redis-Lists-data-type)
-|9  | [When to use Redis String data type?](#When-to-use-Redis-String-data-type)
-|10  | [When to use Redis Set data type?](#When-to-use-Redis-Set-data-type)
-|11  | [When to use Redis Sorted Set data type?](#When-to-use-Redis-Sorted-Set-data-type)
-|12  | [When to use Redis Hash data type?](#When-to-use-Redis-Hash-data-type)
-|13  | [When to use Redis over MongoDB?](#When-to-use-Redis-over-MongoDB)
-|14  | [How are Redis pipelining and transaction different?](How-are-Redis-pipelining-and-transaction-different)
-|15  | [Does Redis support transactions?](#Does-Redis-support-transactions)
-|16  | [Are redis operations on data structures thread safe?](#Are-redis-operations-on-data-structures-thread-safe)
-|17  | [Redis replication and redis sharding (cluster) difference](#Redis-replication-and-redis-sharding-difference)
-|18  | [What is Pipelining in Redis and when to use one?](#What-is-Pipelining-in-Redis-and-when-to-use-one)
-|19  | [Why use cache?](#Why-use-cache)
-|20  | [StringRedisTemplate vs RedisTemplate  vs Jedis](#StringRedisTemplate-vs-RedisTemplate-vs-Jedis)
-|21  | [List Operation In Redis](#List-Operation-In-Redis)
+|5  | [Is Redis just a cache?](#Is-Redis-just-a-cache)|
+|6  | [Does Redis persist data?](#Does-Redis-persist-data)|
+|7  | [What's the advantage of Redis vs using memory?](#What-is-the-advantage-of-Redis-vs-using-memory)|
+|8  | [When to use Redis Lists data type?](#When-to-use-Redis-Lists-data-type)|
+|9  | [When to use Redis String data type?](#When-to-use-Redis-String-data-type)|
+|10  | [When to use Redis Set data type?](#When-to-use-Redis-Set-data-type)|
+|11  | [When to use Redis Sorted Set data type?](#When-to-use-Redis-Sorted-Set-data-type)|
+|12  | [When to use Redis Hash data type?](#When-to-use-Redis-Hash-data-type)|
+|13  | [When to use Redis over MongoDB?](#When-to-use-Redis-over-MongoDB)|
+|14  | [How are Redis pipelining and transaction different?](How-are-Redis-pipelining-and-transaction-different)|
+|15  | [Does Redis support transactions?](#Does-Redis-support-transactions)|
+|16  | [Are redis operations on data structures thread safe?](#Are-redis-operations-on-data-structures-thread-safe)|
+|17  | [Redis replication and redis sharding (cluster) difference](#Redis-replication-and-redis-sharding-difference)|
+|18  | [What is Pipelining in Redis and when to use one?](#What-is-Pipelining-in-Redis-and-when-to-use-one)|
+|19  | [Why use cache?](#Why-use-cache)|
+|20  | [StringRedisTemplate vs RedisTemplate  vs Jedis](#StringRedisTemplate-vs-RedisTemplate-vs-Jedis)|
+|21  | [List Operation In Redis](#List-Operation-In-Redis)|
+|22  | [Hash Operation In Redis](#Hash-Operation-In-Redis)
 
 ## Core Message broker - Redis
 
@@ -524,16 +525,18 @@ the next page to be a millisecond-level operation.
 
 The List in Redis is a simple list of strings. The following are common operations.
 
-
 1. hasKey
 
 To judge if a key exists. Suppose the Key is `test`, the usage is as follows.
+
 ```java
-if (redisTemplate.hasKey(“test”)) {
-System.out.println(“exist”);
-} else {
-System.out.println(“doesn't ex”);
-}
+
+if(redisTemplate.hasKey(“test”)){
+        System.out.println(“exist”);
+        }else{
+        System.out.println(“does not ex.”);
+        }
+
 ```
 
 2. range
@@ -541,61 +544,69 @@ System.out.println(“doesn't ex”);
 This function is used to get the data of the specified interval from the redis cache. The specific usage is as follows.
 
 ```java
-if (redisTemplate.hasKey(“test”)) {
+
+if(redisTemplate.hasKey(“test”)){
 // [4, 3, 2, 1]
-System.out.println(redisTemplate.opsForList().range(“test”, 0, 0)); 
+        System.out.println(redisTemplate.opsForList().range(“test”,0,0));
 // [4]
-System.out.println(redisTemplate.opsForList().range(“test”, 0, 1)); 
+        System.out.println(redisTemplate.opsForList().range(“test”,0,1));
 // [4, 3]
-System.out.println(redisTemplate.opsForList().range(“test”, 0, 2)); 
+        System.out.println(redisTemplate.opsForList().range(“test”,0,2));
 // [4, 3, 2]
-System.out.println(redisTemplate.opsForList().range(“test”, 0, 3)); 
+        System.out.println(redisTemplate.opsForList().range(“test”,0,3));
 // [4, 3, 2, 1]
-System.out.println(redisTemplate.opsForList().range(“test”, 0, 4)); 
+        System.out.println(redisTemplate.opsForList().range(“test”,0,4));
 // [4, 3, 2, 1]
-System.out.println(redisTemplate.opsForList().range(“test”, 0, 5)); 
+        System.out.println(redisTemplate.opsForList().range(“test”,0,5));
 // [4, 3, 2, 1]
-System.out.println(redisTemplate.opsForList().range(“test”, 0, -1)); 
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1));
 // [4, 3, 2, 1] if end withs -1, it means get all values.
-}
+        }
+
 ```
 
 3. delete :: Delete key.
 
 ```java
-List<String> test = new ArrayList<>();
-test.add(“1”);
-test.add(“2”);
-test.add(“3”);
-test.add(“4”);redisTemplate.opsForList().rightPushAll(“test”, test);
-System.out.println(redisTemplate.opsForList().range(“test”, 0, -1)); // [1, 2, 3, 4]
-redisTemplate.delete(“test”);
-System.out.println(redisTemplate.opsForList().range(“test”, 0, -1)); // []
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);redisTemplate.opsForList().rightPushAll(“test”,test);
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1)); // [1, 2, 3, 4]
+        redisTemplate.delete(“test”);
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1)); // []
+
 ```
 
 4. size :: Get size of key.
 
 ```java
-List<String> test = new ArrayList<>();
-test.add(“1”);
-test.add(“2”);
-test.add(“3”);
-test.add(“4”);redisTemplate.opsForList().rightPushAll(“test”, test);
-System.out.println(redisTemplate.opsForList().size(“test”)); // 4
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);redisTemplate.opsForList().rightPushAll(“test”,test);
+        System.out.println(redisTemplate.opsForList().size(“test”)); // 4
+
 ```
 
 5. leftPush
 
-We think of the place where this value is stored as a container. And the data is always taken from the left, but the data can be stored from the left or the right. Left is leftPush and right is rightPush. leftPush is shown below.
+We think of the place where this value is stored as a container. And the data is always taken from the left, but the
+data can be stored from the left or the right. Left is leftPush and right is rightPush. leftPush is shown below.
 
 Here is the usage.
 
 ```java
-for (int i = 0; i < 4; i++) {
-Integer value = i + 1;
-redisTemplate.opsForList().leftPush(“test”, value.toString());
-System.out.println(redisTemplate.opsForList().range(“test”, 0, -1));
-}
+
+for(int i=0;i< 4;i++){
+        Integer value=i+1;
+        redisTemplate.opsForList().leftPush(“test”,value.toString());
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1));
+        }
 /*
 The output of console is below.
 [1]
@@ -603,13 +614,467 @@ The output of console is below.
 [3, 2, 1]
 [4, 3, 2, 1]
 */
+
 ```
 
+6. leftPushAll
 
+```java
 
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);
+        redisTemplate.opsForList().leftPushAll(“test”,test);
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1));
+// [4, 3, 2, 1]
 
+```
+
+You can write like this as well.
+
+```java
+
+redisTemplate.opsForList().leftPushAll(“test”, “1”, “2”, “3”, “4”);
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1));
+// [4, 3, 2, 1]
+
+```
+
+7. leftPushIfPresent
+
+The same operation as leftPush, the only difference is that the value of the key is updated if and only if the key
+exists. If the key does not exist, no action will be taken on the data.redisTemplate.delete(“test”);
+
+```java
+
+redisTemplate.opsForList().leftPushIfPresent(“test”, “1”);
+        redisTemplate.opsForList().leftPushIfPresent(“test”, “2”);
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1));
+// []
+
+```
+
+8. leftPop
+
+This function is used to remove the leftmost element in our abstract container.
+
+```java
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);
+        redisTemplate.opsForList().rightPushAll(“test”,test);redisTemplate.opsForList().leftPop(“test”); // [2, 3, 4]
+        redisTemplate.opsForList().leftPop(“test”); // [3, 4]
+        redisTemplate.opsForList().leftPop(“test”); // [4]
+        redisTemplate.opsForList().leftPop(“test”); // []
+        redisTemplate.opsForList().leftPop(“test”); // []
+
+```
+
+It is worth noting that when the return is empty, the key does not exist in redis. If you call leftPushIfPresent at this
+time, you cannot add data anymore.
+
+```java
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);
+        redisTemplate.opsForList().rightPushAll(“test”,test);redisTemplate.opsForList().leftPop(“test”); // [2, 3, 4]
+        redisTemplate.opsForList().leftPop(“test”); // [3, 4]
+        redisTemplate.opsForList().leftPop(“test”); // [4]
+        redisTemplate.opsForList().leftPop(“test”); // []
+        redisTemplate.opsForList().leftPop(“test”); // []redisTemplate.opsForList().leftPushIfPresent(“test”, “1”); // []
+        redisTemplate.opsForList().leftPushIfPresent(“test”, “1”); // []
+
+```
+
+9. rightPush
+
+```java
+
+for(int i=0;i< 4;i++){
+        Integer value=i+1;
+        redisTemplate.opsForList().leftPush(“test”,value.toString());
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1));
+        }
+/*
+Here is console output.
+[1]
+[1, 2]
+[1, 2, 3]
+[1, 2, 3, 4]
+*/
+
+```
+
+10. rightPushAll
+
+Same as rightPush ,push all the values that contained in the list.
+
+```java
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);
+        redisTemplate.opsForList().leftPushAll(“test”,test);
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1));
+// [1, 2, 3, 4]
+
+```
+
+You can write like this as well.
+
+```java
+
+redisTemplate.opsForList().rightPushAll(“test”, “1”, “2”, “3”, “4”);
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1));
+// [1, 2, 3, 4]
+
+```
+
+11. rightPushIfPresent
+
+Same as rightPush .But only one thing different. It will update the key’s value only if the key is exist.If the key is
+not exist, nothing happens.
+
+```java
+
+redisTemplate.delete(“test”);redisTemplate.opsForList().rightPushIfPresent(“test”, “1”);
+        redisTemplate.opsForList().rightPushIfPresent(“test”, “2”);
+        System.out.println(redisTemplate.opsForList().range(“test”,0,-1)); // []
+
+```
+
+12. rightPop
+
+This function is used to remove the rightmost element from our abstract container.
+
+```java
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);
+        redisTemplate.opsForList().rightPushAll(“test”,test);redisTemplate.opsForList().rightPop(“test”); // [1, 2, 3]
+        redisTemplate.opsForList().rightPop(“test”); // [1, 2]
+        redisTemplate.opsForList().rightPop(“test”); // [1]
+        redisTemplate.opsForList().rightPop(“test”); // []
+        redisTemplate.opsForList().rightPop(“test”); // []
+
+```
+
+Same as leftPop，If the return value is already equal [] , call rightPushIfPresent cannot write any data.
+
+13. index
+
+Used to get the value of the element at the specified position in the key.
+
+```java
+
+if(redisTemplate.hasKey(“test”)){
+// [1, 2, 3, 4]
+        System.out.println(redisTemplate.opsForList().index(“test”,-1)); // 4
+        System.out.println(redisTemplate.opsForList().index(“test”,0)); // 1
+        System.out.println(redisTemplate.opsForList().index(“test”,1)); // 2
+        System.out.println(redisTemplate.opsForList().index(“test”,2)); // 3
+        System.out.println(redisTemplate.opsForList().index(“test”,3)); // 4
+        System.out.println(redisTemplate.opsForList().index(“test”,4)); // null
+        System.out.println(redisTemplate.opsForList().index(“test”,5)); // null
+        }
+
+```
+
+There are two points that worth noting. One is that if the index is -1, it will return the last element of the List, and
+the other will return `null` if the subscript is out of bounds.
+
+14. trim
+
+```java
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);
+        redisTemplate.opsForList().rightPushAll(“test”,test);
+// [1, 2, 3, 4]
+        redisTemplate.opsForList().trim(“test”,0,2);
+// [1, 2, 3]
+
+```
+
+15. remove
+
+Used to remove the element specified in the key. Accepts 3 parameters, which are the hash key name, count, and the value
+to be removed. There are three values that can be passed to the count, which are -1, 0, 1.
+
+-1 means starting from the right side of the storage container, deleting a single value that matches the value to be
+removed; 0means deleting all data matching value; 1means starting from the left side of the storage container , delete a
+single data that matches the value you want to remove.
+
+```java
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);
+        test.add(“4”);
+        test.add(“3”);
+        test.add(“2”);
+        test.add(“1”);redisTemplate.opsForList().rightPushAll(“test”,test); // [1, 2, 3, 4, 4, 3, 2, 1]// When the count is -1, value is 1
+        redisTemplate.opsForList().remove(“test”,-1, “1”); // [1, 2, 3, 4, 4, 3, 2]// When the count is 1, value is 1
+        redisTemplate.opsForList().remove(“test”,1, “1”); // [2, 3, 4, 4, 3, 2]// When the count is 0, value is 4
+        redisTemplate.opsForList().remove(“test”,0, “4”); // [2, 3, 3, 2]
+
+```
+
+16. rightPopAndLeftPush
+
+This function is used to manipulate data between two hash keys. And it accepts three parameters, source key, target
+key.And it will rightPop the source key, and leftPush the target key with the return value of rightPop.
+
+```java
+
+List<String> test=new ArrayList<>();
+        test.add(“1”);
+        test.add(“2”);
+        test.add(“3”);
+        test.add(“4”);List<String> test2=new ArrayList<>();
+        test2.add(“1”);
+        test2.add(“2”);
+        test2.add(“3”);redisTemplate.opsForList().rightPushAll(“test”,test); // [1, 2, 3, 4]
+        redisTemplate.opsForList().rightPushAll(“test2”,test2); // [1, 2, 3]redisTemplate.opsForList().rightPopAndLeftPush(“test”, “test2”);System.out.println(redisTemplate.opsForList().range(“test”, 0, -1)); // [1, 2, 3]
+        System.out.println(redisTemplate.opsForList().range(“test2”,0,-1)); // [4, 1, 2, 3]
+
+```
 
 **[⬆ Back to Top](#table-of-contents)**
+
+22. ### Hash Operation In Redis
+
+1. put :: Used to set key and value into a hash key.
+
+```java
+
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);redisTemplate.opsForHash().put(“test”, “map”,list.toString()); // [1, 2, 3, 4]
+        redisTemplate.opsForHash().put(“test”, “isAdmin”,true); // true
+
+```
+
+2. putAll :: Used to set multiple key and value at the same time.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);
+        List<String> list2=new ArrayList<>();
+        list2.add(“5”);
+        list2.add(“6”);
+        list2.add(“7”);
+        list2.add(“8”);
+        Map<String, String> valueMap=new HashMap<>();
+        valueMap.put(“map1”,list.toString());
+        valueMap.put(“map2”,list2.toString());redisTemplate.opsForHash().putAll(“test”,valueMap); // {map2=[5, 6, 7, 8], map1=[1, 2, 3, 4]}
+```
+
+3. putIfAbsent
+
+Used to write data into a key that contained in a hash key. When the key is exist, it will not write any data.It will
+write data only if the hash key is not exist.
+
+And what if the hash key is not exist? Redis will create the hask key, then create the key and set the value inside the
+hash key.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);
+        redisTemplate.opsForHash().putIfAbsent(“test”, “map”,list.toString());
+        System.out.println(redisTemplate.opsForHash().entries(“test”)); // {map=[1, 2, 3, 4]}
+```
+
+4. get :: Used to get a specific key’s value in a hash key.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);redisTemplate.opsForHash().put(“test”, “map”,list.toString());
+        redisTemplate.opsForHash().put(“test”, “isAdmin”,true);System.out.println(redisTemplate.opsForHash().get(“test”, “map”)); // [1, 2, 3, 4]
+        System.out.println(redisTemplate.opsForHash().get(“test”, “isAdmin”)); // trueBoolean bool = (Boolean) redisTemplate.opsForHash().get(“test”, “isAdmin”);
+        System.out.println(bool); // trueString str = redisTemplate.opsForHash().get(“test”, “map”).toString();
+        List<String> array=JSONArray.parseArray(str,String.class);
+        System.out.println(array.size()); // 4
+```
+
+It’s worth noting that the return data of using the `get` function is of type Object.
+
+So if you need another type, you need to force cast the type. For example, If you want to cast the type to List, you can
+use fastjson to do that.
+
+5. delete
+
+Used to delete a key that contained in a hash key. You can also think it like delete a key in a map.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);
+        List<String> list2=new ArrayList<>();
+        list2.add(“5”);
+        list2.add(“6”);
+        list2.add(“7”);
+        list2.add(“8”);
+        Map<String, String> valueMap=new HashMap<>();
+        valueMap.put(“map1”,list.toString());
+        valueMap.put(“map2”,list2.toString());redisTemplate.opsForHash().putAll(“test”,valueMap); // {map2=[5, 6, 7, 8], map1=[1, 2, 3, 4]}
+        redisTemplate.opsForHash().delete(“test”, “map1”); // {map2=[5, 6, 7, 8]}
+```
+
+6. values :: Used to get all values that contained in a hash key.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);redisTemplate.opsForHash().put(“test”, “map”,list.toString());
+        redisTemplate.opsForHash().put(“test”, “isAdmin”,true);System.out.println(redisTemplate.opsForHash().values(“test”)); // [[1, 2, 3, 4], true]
+```
+
+7. entries :: Used to get all keys and values that contained in a hash key, return with Map.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);redisTemplate.opsForHash().put(“test”, “map”,list.toString());
+        redisTemplate.opsForHash().put(“test”, “isAdmin”,true);Map<String, String> map=redisTemplate.opsForHash().entries(“test”);
+        System.out.println(map.get(“map”)); // [1, 2, 3, 4]
+        System.out.println(map.get(“map”)instanceof String); // true
+        System.out.println(redisTemplate.opsForHash().entries(“test”)); // {a=[1, 2, 3, 4], isAdmin=true}
+```
+
+8. hasKey :: Used to Judge if a hash key contains a key.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);redisTemplate.opsForHash().put(“test”, “map”,list.toString());
+        redisTemplate.opsForHash().put(“test”, “isAdmin”,true);System.out.println(redisTemplate.opsForHash().hasKey(“test”, “map”)); // true
+        System.out.println(redisTemplate.opsForHash().hasKey(“test”, “b”)); // false
+        System.out.println(redisTemplate.opsForHash().hasKey(“test”, “isAdmin”)); // true
+```
+
+9. keys :: Used to get all keys that contained in a hash key.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);redisTemplate.opsForHash().put(“test”, “map”,list.toString());
+        redisTemplate.opsForHash().put(“test”, “isAdmin”,true);System.out.println(redisTemplate.opsForHash().keys(“test”)); // [a, isAdmin]
+```
+
+10. size :: Used to get the number of keys contained in a hash key.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);redisTemplate.opsForHash().put(“test”, “map”,list.toString());
+        redisTemplate.opsForHash().put(“test”, “isAdmin”,true);System.out.println(redisTemplate.opsForHash().size(“test”)); // 2
+```
+
+11. increment :: Used to make a key in a hash key accumulate based on the value passed in. The value passed in can only
+    be double or long, not accepting float.
+
+```java
+redisTemplate.opsForHash().increment(“test”, “a”,3);
+        redisTemplate.opsForHash().increment(“test”, “a”,-3);
+        redisTemplate.opsForHash().increment(“test”, “a”,1);
+        redisTemplate.opsForHash().increment(“test”, “a”,0);System.out.println(redisTemplate.opsForHash().entries(“test”)); // {a=1}
+```
+
+12. multiGet :: To get multiple keys’s value at once.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);
+        List<String> list2=new ArrayList<>();
+        list2.add(“5”);
+        list2.add(“6”);
+        list2.add(“7”);
+        list2.add(“8”);redisTemplate.opsForHash().put(“test”, “map1”,list.toString()); // [1, 2, 3, 4]
+        redisTemplate.opsForHash().put(“test”, “map2”,list2.toString()); // [5, 6, 7, 8]List<String> keys = new ArrayList<>();
+        keys.add(“map1”);
+        keys.add(“map2”);System.out.println(redisTemplate.opsForHash().multiGet(“test”,keys)); // [[1, 2, 3, 4], [5, 6, 7, 8]]
+        System.out.println(redisTemplate.opsForHash().multiGet(“test”,keys)instanceof List); // true
+```
+
+13. scan :: Get all key and value which matching the condition. I have checked some data, most of them said that scan is
+    unable to match fuzzyly. But I tried it myself.It can.
+
+```java
+List<String> list=new ArrayList<>();
+        list.add(“1”);
+        list.add(“2”);
+        list.add(“3”);
+        list.add(“4”);
+        List<String> list2=new ArrayList<>();
+        list2.add(“5”);
+        list2.add(“6”);
+        list2.add(“7”);
+        list2.add(“8”);
+        List<String> list3=new ArrayList<>();
+        list3.add(“9”);
+        list3.add(“10”);
+        list3.add(“11”);
+        list3.add(“12”);
+        Map<String, String> valueMap=new HashMap<>();
+        valueMap.put(“map1”,list.toString());
+        valueMap.put(“SCAN_map2”,list2.toString());
+        valueMap.put(“map3”,list3.toString());redisTemplate.opsForHash().putAll(“test”,valueMap); // {SCAN_map2=[5, 6, 7, 8], map3=[9, 10, 11, 12], map1=[1, 2, 3, 4]}Cursor<Map.Entry<String, String>> cursor = redisTemplate.opsForHash().scan(“test”, ScanOptions.scanOptions().match(“*SCAN*”).build());
+        if(cursor.hasNext()){
+        while(cursor.hasNext()){
+        Map.Entry<String, String> entry=cursor.next();
+        System.out.println(entry.getValue()); // [5, 6, 7, 8]
+        }
+        }
+```
+
+**[⬆ Back to Top](#table-of-contents)**
+
+
 
 
 
