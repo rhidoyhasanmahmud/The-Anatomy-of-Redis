@@ -26,6 +26,9 @@
 |16  | [Are redis operations on data structures thread safe?](#Are-redis-operations-on-data-structures-thread-safe)
 |17  | [Redis replication and redis sharding (cluster) difference](#Redis-replication-and-redis-sharding-difference)
 |18  | [What is Pipelining in Redis and when to use one?](#What-is-Pipelining-in-Redis-and-when-to-use-one)
+|19  | [Why use cache?](#Why-use-cache)
+|20  | [StringRedisTemplate vs RedisTemplate](#StringRedisTemplate-vs-RedisTemplate)
+|21  | [List Operation In Redis](#List-Operation-In-Redis)
 
 ## Core Message broker - Redis
 
@@ -493,9 +496,122 @@ The main advantage of Redis pipelining is to boosting up protocol performance. I
 multiple commands simultaneous execution. The speedup gained by pipelining ranges from factor of 5 for connections to
 localhost up to factor of at least 100 over low speed internet connections.
 
+**[⬆ Back to Top](#table-of-contents)**
+
+19. ### Why use cache?
+
+In the front-end query, the amount of matching data for a single query may reach hundreds or even thousands, and it is
+definitely required to display the page in the front end. Even if you query 10 data at a time, the entire query still
+takes 6–8 seconds. Imagine a 10s waiting for every page.
+
+So, use the redis cache at this time. Reduce the number of requests to the database. The matching data is stored in the
+database together. This only takes a little longer in the first query. Once the query is completed, the user clicks on
+the next page to be a millisecond-level operation.
+
+**[⬆ Back to Top](#table-of-contents)**
+
+20. ### StringRedisTemplate vs RedisTemplate vs Jedis
+
+- StringRedisTemplate can only manage the data in StringRedisTemplate.
+- RedisTemplate can only manage the data in RedisTemplate.
+- Use Jedis to connect to Redis database.
+
+> Use redisTemplate:: Spring encapsulates a more powerful template, redisTemplate, to facilitate the operation of the Redis cache during development. String, List, Set, Hash, and Zset can be stored in Redis. The following will be introduced separately for List and Hash.
+
+**[⬆ Back to Top](#table-of-contents)**
+
+21. List Operation In Redis
+
+The List in Redis is a simple list of strings. The following are common operations.
+
+
+1. hasKey
+
+To judge if a key exists. Suppose the Key is `test`, the usage is as follows.
+```java
+if (redisTemplate.hasKey(“test”)) {
+System.out.println(“exist”);
+} else {
+System.out.println(“doesn't ex”);
+}
+```
+
+2. range
+
+This function is used to get the data of the specified interval from the redis cache. The specific usage is as follows.
+
+```java
+if (redisTemplate.hasKey(“test”)) {
+// [4, 3, 2, 1]
+System.out.println(redisTemplate.opsForList().range(“test”, 0, 0)); 
+// [4]
+System.out.println(redisTemplate.opsForList().range(“test”, 0, 1)); 
+// [4, 3]
+System.out.println(redisTemplate.opsForList().range(“test”, 0, 2)); 
+// [4, 3, 2]
+System.out.println(redisTemplate.opsForList().range(“test”, 0, 3)); 
+// [4, 3, 2, 1]
+System.out.println(redisTemplate.opsForList().range(“test”, 0, 4)); 
+// [4, 3, 2, 1]
+System.out.println(redisTemplate.opsForList().range(“test”, 0, 5)); 
+// [4, 3, 2, 1]
+System.out.println(redisTemplate.opsForList().range(“test”, 0, -1)); 
+// [4, 3, 2, 1] if end withs -1, it means get all values.
+}
+```
+
+3. delete :: Delete key.
+
+```java
+List<String> test = new ArrayList<>();
+test.add(“1”);
+test.add(“2”);
+test.add(“3”);
+test.add(“4”);redisTemplate.opsForList().rightPushAll(“test”, test);
+System.out.println(redisTemplate.opsForList().range(“test”, 0, -1)); // [1, 2, 3, 4]
+redisTemplate.delete(“test”);
+System.out.println(redisTemplate.opsForList().range(“test”, 0, -1)); // []
+```
+
+4. size :: Get size of key.
+
+```java
+List<String> test = new ArrayList<>();
+test.add(“1”);
+test.add(“2”);
+test.add(“3”);
+test.add(“4”);redisTemplate.opsForList().rightPushAll(“test”, test);
+System.out.println(redisTemplate.opsForList().size(“test”)); // 4
+```
+
+5. leftPush
+
+We think of the place where this value is stored as a container. And the data is always taken from the left, but the data can be stored from the left or the right. Left is leftPush and right is rightPush. leftPush is shown below.
+
+Here is the usage.
+
+```java
+for (int i = 0; i < 4; i++) {
+Integer value = i + 1;
+redisTemplate.opsForList().leftPush(“test”, value.toString());
+System.out.println(redisTemplate.opsForList().range(“test”, 0, -1));
+}
+/*
+The output of console is below.
+[1]
+[2, 1]
+[3, 2, 1]
+[4, 3, 2, 1]
+*/
+```
+
+
+
 
 
 **[⬆ Back to Top](#table-of-contents)**
+
+
 
 
 
