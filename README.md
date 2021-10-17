@@ -1238,6 +1238,20 @@ According to Redis.io, there are many languages supported by the Redis including
 
 **[⬆ Back to Top](#table-of-contents)**
 
+## Disclaimer
+
+The questions provided in this repository are the summary of frequently use across numerous business requirements. The primary purpose is for you to get a sense of what some companies might ask — do not get discouraged if you don't know the answer to all of them ⁠— that is ok!
+
+Furthermore, Collect Questions and Answers from Different blogs. 
+
+Good luck with your journey.  😊
+
+---
+
+## Contact
+
+To contact:: hasan.mahmud8177@gmail.com
+
 
 
  
