@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: springboot-redis
+
+## Jackson binding config
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    
+## File Storage Properties
+file:
+  upload-dir: ./uploads

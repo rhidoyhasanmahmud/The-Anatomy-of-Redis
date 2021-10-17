@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<configuration>
+ 
+    <property name="LOGS" value="./logs" />
+    <!-- Get the property for app name from the properties file -->
+    <springProperty scope="context" name="appName" source="spring.application.name"/>
+ 
+    <appender name="Console"
+        class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %highlight(%-5p) --- [%t] %green(%c{3}) : %m%n
+            </Pattern>
+        </layout>
+    </appender>
+    
+ <springProfile name="prod,dev">
+ 	
+    <appender name="RollingFile"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/${appName}.log</file>
+        <encoder
+            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p  --- [%t] %c{3} : %m%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+          	<!-- daily rollover -->
+          	<fileNamePattern>${LOGS}/${appName}/${appName}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+          	<!-- keep 30 days' worth of history -->
+          	<maxHistory>30</maxHistory>
+          	<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+             	<!-- or whenever the file size reaches 80MB -->
+              	<maxFileSize>30MB</maxFileSize>
+           	</timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </root>
+ 
+    <logger name="com.babl.robismartsales" level="trace" additivity="false">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </logger>
+    
+ </springProfile>
+
+</configuration>

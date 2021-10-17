@@ -1,0 +1,20 @@
+2020-12-28 21:07:37 INFO   --- [main] c.l.s.SpringbootredisApplication : Starting SpringbootredisApplication using Java 11.0.8 on DESKTOP-67VPB10 with PID 460 (F:\Smart-Sales\springbootredis\target\classes started by pc in F:\Smart-Sales\springbootredis)
+2020-12-28 21:07:37 INFO   --- [main] c.l.s.SpringbootredisApplication : The following profiles are active: dev
+2020-12-28 21:07:37 INFO   --- [main] c.l.s.SpringbootredisApplication : Started SpringbootredisApplication in 0.853 seconds (JVM running for 2.071)
+2020-12-28 21:07:59 INFO   --- [main] c.l.s.SpringbootredisApplication : Starting SpringbootredisApplication using Java 11.0.8 on DESKTOP-67VPB10 with PID 1060 (F:\Smart-Sales\springbootredis\target\classes started by pc in F:\Smart-Sales\springbootredis)
+2020-12-28 21:07:59 INFO   --- [main] c.l.s.SpringbootredisApplication : The following profiles are active: dev
+2020-12-28 21:08:00 INFO   --- [main] c.l.s.SpringbootredisApplication : Started SpringbootredisApplication in 0.883 seconds (JVM running for 1.884)
+2020-12-28 21:14:40 INFO   --- [main] c.l.s.SpringbootredisApplication : Starting SpringbootredisApplication using Java 11.0.8 on DESKTOP-67VPB10 with PID 10980 (F:\Smart-Sales\springbootredis\target\classes started by pc in F:\Smart-Sales\springbootredis)
+2020-12-28 21:14:40 INFO   --- [main] c.l.s.SpringbootredisApplication : The following profiles are active: dev
+2020-12-28 21:14:41 INFO   --- [main] c.z.h.HikariDataSource : HikariPool-1 - Starting...
+2020-12-28 21:14:42 INFO   --- [main] c.z.h.HikariDataSource : HikariPool-1 - Start completed.
+2020-12-28 21:14:42 WARN   --- [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-12-28 21:14:43 INFO   --- [main] c.l.s.SpringbootredisApplication : Started SpringbootredisApplication in 3.543 seconds (JVM running for 4.567)
+2020-12-28 21:14:56 INFO   --- [RMI TCP Connection(2)-127.0.0.1] c.z.h.HikariDataSource : HikariPool-1 - Shutdown initiated...
+2020-12-28 21:14:56 INFO   --- [RMI TCP Connection(2)-127.0.0.1] c.z.h.HikariDataSource : HikariPool-1 - Shutdown completed.
+2020-12-28 23:55:57 INFO   --- [main] c.l.s.SpringbootredisApplication : Starting SpringbootredisApplication using Java 11.0.8 on DESKTOP-67VPB10 with PID 6364 (F:\Smart-Sales\springbootredis\target\classes started by pc in F:\Smart-Sales\springbootredis)
+2020-12-28 23:55:57 INFO   --- [main] c.l.s.SpringbootredisApplication : The following profiles are active: dev
+2020-12-28 23:55:59 INFO   --- [main] c.z.h.HikariDataSource : HikariPool-1 - Starting...
+2020-12-28 23:55:59 INFO   --- [main] c.z.h.HikariDataSource : HikariPool-1 - Start completed.
+2020-12-28 23:56:01 WARN   --- [main] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-12-28 23:56:01 INFO   --- [main] c.l.s.SpringbootredisApplication : Started SpringbootredisApplication in 4.071 seconds (JVM running for 5.022)
