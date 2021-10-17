@@ -34,7 +34,7 @@
 |24  | [Project - 01 : Redis Cache With SpringBoot Project](#Redis-Cache-With-SpringBoot)|
 |24  | [Project - 02 : Redis Cache With SpringBoot Project](#Redis-Cache-With-SpringBoot-Project)|
 
-## Core Message broker - Redis
+## Core Question - Redis
 
 1. ### What is Redis?
 
