@@ -21,6 +21,8 @@
 |11  | [When to use Redis Sorted Set data type?](#When-to-use-Redis-Sorted-Set-data-type)
 |12  | [When to use Redis Hash data type?](#When-to-use-Redis-Hash-data-type)
 |13  | [When to use Redis over MongoDB?](#When-to-use-Redis-over-MongoDB)
+|14  | [How are Redis pipelining and transaction different?](How-are-Redis-pipelining-and-transaction-different)
+|15  | [Does Redis support transactions?](#Does-Redis-support-transactions)
 
 ## Core Message broker - Redis
 
@@ -394,7 +396,37 @@ persisted.
 ---------
 **[⬆ Back to Top](#table-of-contents)**
 
+14. ### How are Redis pipelining and transaction different?
 
+Pipelining is primarily a network optimization. It essentially means the client buffers up a bunch of commands and ships
+them to the server in one go. The commands are not guaranteed to be executed in a transaction. The benefit here is
+saving network round trip time for every command.
+
+Redis is single threaded so an individual command is always atomic, but two given commands from different clients can
+execute in sequence, alternating between them for example.
+
+Multi/exec, however, ensures no other clients are executing commands in between the commands in the multi/exec sequence.
+
+**[⬆ Back to Top](#table-of-contents)**
+
+15. ### Does Redis support transactions?
+
+Redis transactions are different. It guarantees two things.
+
+1. All or none of the commands are executed
+2. sequential and uninterrupted commands
+
+Having said that, if you have the control over your code and know when the system failure would happen (some sort of
+catching the exception) you can achieve your requirement in this way.
+
+1. MULTI -> Start transaction
+2. LPUSH queue1 1 -> pushing in queue 1
+3. LPUSH queue2 1 -> pushing in queue 2
+4. EXEC/DISCARD In the
+
+4th step do EXEC if there is no error, if you encounter an error or exception and you wanna rollback do DISCARD.
+
+**[⬆ Back to Top](#table-of-contents)**
 
 
 
