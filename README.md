@@ -14,7 +14,7 @@
 |4  | [Redis cache limits](#Redis-cache-limits)|
 |5  | [Is Redis just a cache?](#Is-Redis-just-a-cache)
 |6  | [Does Redis persist data?](#Does-Redis-persist-data)
-|7  | [What's the advantage of Redis vs using memory?](#What's-the-advantage-of-Redis-vs-using-memory)
+|7  | [What's the advantage of Redis vs using memory?](#What-is-the-advantage-of-Redis-vs-using-memory)
 
 
 ## Core Message broker - Redis
@@ -170,6 +170,8 @@ But unlike a cash Redis:
 - Supports ultra-fast lua-scripts. Its execution time equals to C commands execution.
 - Can be shared across multiple instances of the application (instead of in-memory cache for each app instance)
 
+**[⬆ Back to Top](#table-of-contents)**
+
 6. ### Does Redis persist data?  
 
 Redis supports so-called "snapshots". This means that it will do a complete copy of whats in memory at some points in time (e.g. every full hour). When you lose power between two snapshots, you will lose the data from the time between the last snapshot and the crash (doesn't have to be a power outage..). Redis trades data safety versus performance, like most NoSQL-DBs do.
@@ -183,7 +185,9 @@ But data in redis is not really persistent, because:
 - crash of redis process means losing all changes since last save
 - BGSAVE operation can only be performed if you have enough free RAM (the amount of extra RAM is equal to the size of redis DB)
 
-7. ### What's the advantage of Redis vs using memory?
+**[⬆ Back to Top](#table-of-contents)**
+
+7. ### What is the advantage of Redis vs using memory?
 
 Redis is a remote data structure server. It is certainly slower than just storing the data in local memory (since it involves socket roundtrips to fetch/store the data). However, it also brings some interesting properties:
 
@@ -199,7 +203,7 @@ Redis is a remote data structure server. It is certainly slower than just storin
 
 Basically, if you need your application to scale on several nodes sharing the same data, then something like Redis (or any other remote key/value store) will be required.
 
-
+**[⬆ Back to Top](#table-of-contents)**
 
 
 
