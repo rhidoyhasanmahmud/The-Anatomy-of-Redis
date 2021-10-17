@@ -29,7 +29,8 @@
 |19  | [Why use cache?](#Why-use-cache)|
 |20  | [StringRedisTemplate vs RedisTemplate  vs Jedis](#StringRedisTemplate-vs-RedisTemplate-vs-Jedis)|
 |21  | [List Operation In Redis](#List-Operation-In-Redis)|
-|22  | [Hash Operation In Redis](#Hash-Operation-In-Redis)
+|22  | [Hash Operation In Redis](#Hash-Operation-In-Redis)|
+|23  | [Redis Clustering in a Nutshell](#Redis-Clustering-in-a-Nutshell)|
 
 ## Core Message broker - Redis
 
@@ -1074,10 +1075,152 @@ List<String> list=new ArrayList<>();
 
 **[⬆ Back to Top](#table-of-contents)**
 
+23. ### Redis Clustering in a Nutshell
+
+> What is Redis
+
+Redis or the “Remote Dictionary Server" is a BSD licensed Open source Key-Value based NoSQL Database which can be used
+for many things like caching, pub/sub workflows, Fully-fledge database work etc. Its main value proposition, the speed,
+is achieved by residing in the memory. That is why Redis is known as an In-Memory database. However, being In-Memory
+suggest that it is volatile. But Redis provides options to become a persistent database by writing to disk in different
+ways. Another specialty in Redis is supporting many complex data structures. Those include Strings, Lists, Sets, Sorted
+Sets, Hashes, Bitmaps, HyperlogLogs, and Geospatial Indexes. If we have a glance at the history of Redis, it was a
+project initiated by Salvatore Sanfilippo back in the days and was first released on 10th May 2009. It is
+cross-platformed and written in ANCI C.
+
+> Who uses Redis
+
+Redis is one of the widely used Database in the world currently, ranking at number 8 in all Database Engines category
+and ranking at number 1 in the Key-Value store category (DB-Engines, 2019)
+
+Some of the major companies or solutions that use Redis in practice includes Twitter, GitHub, StackOverFlow, Flickr,
+Alibaba, Instagram, SnapChat and Pinterest.
+
+> Clustering and Sharding
+
+When there is a large amount of data needed to be stored, it is natural to exhaust one machine (or Node). In such a
+situation, the most attractive solution is going into distributed architecture.
+
+Similarly, in Redis also, we have the concept of clustering, where you can divide your data to be stored in multiple
+nodes, who works together to achieve the common objective.
+
+So how does Redis do this? That is were “Sharding” comes into the picture. In simple terms, sharding means
+partitioning (like in SQL database terminology). In Redis, every key that we save is conceptually a part of “Hash slot”.
+There are 16384 Hash Slots in a Redis implementation (whether it is a standalone version of Redis or clustered one,
+doesn’t matter). In sharding, these Hash slots are getting divided between the nodes, hence, each node carries a subset
+of Hash Slots.
+
+For example, if the cluster need to have 3 nodes, the Hash slots will be divided between them like,
+
+- A — 0 to 5500
+- B — 5501 to 11000
+- C — 11001 to 16384
+
+Let say you are adding a node newly. What will happen is, A, B, and C will transfer some of its slots to the new Node.
+Similarly, in removing, (let's say we are removing C from the cluster of A, B, and C) A and B will take C’s Hash Slots
+and make C capable of abandoning the Cluster.
+
+This process of moving the Hash slots from node to node (or partitioning of Hash slots — Sharding) is not requiring the
+operations to stop or pause. Hence, adding and removing of nodes also does not requires operations to stop or pause.
+Therefore, it ensures no downtime for the cluster i.e. maximum availability.
+
+> Replication & Failover in Redis
+
+Redis follows a Master-Slave replication process. Now, you might be wondering what that is. Let me explain:
+
+Let’s take the above example I mentioned; the cluster of A, B, and C. The client is directly talking with the cluster, and one of the masters will be accepting the request. In here if the B fails, the whole cluster will fail since we don’t have the Hash Slots from 5501 to 11000.
+
+But, what if we have a replica for each of A, B, and C nodes? Let’s say these replicas are A1, B1, and C1. They are called “Slaves” in the Redis world, and A, B, and C is known as “Masters”. Each Slave is an exact copy of its master (theoretically. I will discuss when it is not, in the Trade-off section) and one Master can have multiple Slaves as well.
+
+So does how this ensures the high availability or what happens in a failover scenario?
+
+Let's say B had some internal issues and stopped working. Others in the cluster will get to know it by the “Gossip Port” since they run node-to-node communication (including health checks) through this port. Then A and C does voting and, will promote one of the B’s replicas to be a Master. In this example, since we have only B1, it will be promoted to be the new master. If the B rejoins the cluster, it has to be a slave, not a master.
+
+![Failover Scenario in Redis - Image - 1]()
+
+In a nutshell, even if the B fails as a master, since its slave takes his position and does his work, the cluster does not fail. Hence, it ensures maximum availability as well.
+
+The replication mechanism provides basic two uses in the Redis clusters.
+
+1. Multiple Reads or Sorts at a time — performance improvement
+2. Recovery in the case of failure — high availability and fault-tolerance
+
+Note that, I only took one replica scenario as an example. you can have N number of copies of your data using N-1 replicas for a master. However, if all these N nodes ( N nodes means including the master) fail, the cluster fails as well. Therefore, if you are going for a cloud solution, like AWS (Amazon Web Services), the best practice is to have a Master in one availability zone and each replica in separate availability zones.
 
 
+> Trade-off of consistency
 
+In delivering Redis’s value proposition, the Performance, it has to trade off between Performance and Consistency. Redis cannot guarantee strong Consistency, i.e. there is a possibility for a “Write” to be lost. This can happen due to two reasons: Asynchronous Replication and Network Partitioning.
+Asynchronous Replication Scenario
+Consider above example and a situation where a client is writing to the Master A. As soon as the client finish writing, A acknowledge it by sending an “OK” message to the client, without writing it to its replica (slave) A1. A writes to its slave A1, after the acknowledgment is sent to the client.
 
+What if, A fails after the acknowledgment is sent, but before writing to the slave? It will make the other masters, B and C, to select A1 as the new master. But, A1 does not have the last write that client did to A. If the A rejoin cluster, it will be placed as a slave of A1. It will look at A1, and update itself by flushing the last write of the client, since, in Redis, Master is getting copied by the slaves. In this case, this last write of the client will be forever lost.
+
+Note that, replication process can be configured to be synchronous via WAIT command. However, that also does not guarantee 100% consistency. Instead, it will make it degrade in performance aspects. But in case the consistency is very crucial to you, there are commercial solutions available like SOSS (ScaleOut State Server) or Amazon ElastiCache, which are In-Memory Data Grid (IMDG) implementations that guarantee no loss of data.
+
+![Asynchronous Replication Data Loss - Image - 2]()
+
+> Network Partitioning Scenario
+
+There can be a situation where there is a network partitioning, which result in the client on the minority side with at least one master.
+
+Let take an example where A ends up alone with the client in the minority side while B, C, A1, B1, and C1 are in majority partitioning. When the client tries to write not knowing about the partitioning, Master A accepts the writes. If Partition lasts only a few seconds, it will be ok. But if not, the majority side understands that A is no longer in the communicating, hence elect A1 as new Master. At that moment, A also stops accepting the writes. However, the data written until the node time-out is forever lost even if the A rejoin the cluster. (because A is rejoining as a Slave since A1 is promoted). This “node time-out” is a parameter that we can tune in Redis clustering.
+
+> Redis as a Persistence Storage
+
+Like I mentioned before, Redis is an In-Memory database with Persistency option. So let's look at how does Redis achieves Persistency while residing in the Volatile memory.
+
+Redis achieves this in 2 ways.
+- RDB Mechanism
+- AOF logs
+
+> RDB Mechanism
+
+RDB (Redis Database Backup) mechanism is very much similar to the SQL database’s concept of the snapshot. RDB file is a snapshot taken of all the user data at a given point-of-time, which is saved in secondary storage (permanent storage — in disk etc.) and used for the recovery processes. This snapshot taking can be invoked through 3 different triggers:
+
+- Time transpire — periodic automatic invocation
+- Reaching a change threshold — periodic automatic invocation
+- SAVE Command — forceful invocation
+
+However, you can still lose data which were written after the last snapshot, in a cluster failure situation, since the RDB mechanism is mostly periodic. But on the contrary, being periodic ensures the process is less resource intensive.
+
+> AOF logs
+
+The Append-Only Files (AOF) writes all operations received by the server to the disk. This process happens after each operation. Hence, it is very resource intensive. AOFs are also very large compared to the RDB Files, which are by default compressed. Therefore, larger disk space is needed for storing AOFs.
+
+On the other hand, since it writes in each operation, it can guarantee minimum data loss in a cluster failure.
+
+In practice, both of these methods are being used in industry; sometimes, both together.
+
+> Pros and Cons
+
+>> Pros
+
+- Performance (Speed):
+Since Redis is In-memory, it reduces the overhead in accessing the Disk to retrieve data, since it requests from disk only when the data is not available in Redis cache.
+
+![How Redis improve performance by minimizing disk reads - Image 3]()
+
+There are some other options which are available in Redis for performance optimization. For example, pipelining feature which clusters multiple commands and sends them at once to the cluster.
+
+Another mechanism in achieving high performance is the architectural design of the cluster. For example, have a look at the bellow architecture which optimizes the performance in a caching use case.
+
+![Architecture to maximize performance - image 4]()
+
+- Durability :
+
+Since there is an option to be written into Disk, Redis can be used as both Fully-fledge Database and Caching system.
+
+- Multi-language support :
+
+According to Redis.io, there are many languages supported by the Redis including, C, C#, C++, Java, Python, Scalar, Ruby, Go Lang etc.
+
+- Flexibility and Simplicity
+- Scalability
+
+> Cons
+
+- The possibility of Data loss
 
 
 
