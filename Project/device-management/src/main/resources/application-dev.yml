@@ -1,0 +1,32 @@
+server:
+  servlet:
+    context-path: /v1
+  port: 8090
+
+spring:
+  #  datasource:
+  #    url: jdbc:postgresql://localhost:5432/springboot_redis?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&useUnicode=yes&characterEncoding=UTF-8&characterSetResults=UTF-8
+  #    username: postgres
+  #    password: myserverkonnect
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      javax.persistence.validation.mode: none
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.format_sql: false
+
+#  redis:
+#    hostname: 182.11.11.230
+#    port: 6379
+#    password: 1234
+
+logging:
+  level:
+    org.springframework: WARN
+    org.springframework.security: WARN
+    org.hibernate: WARN
+    org.apache: WARN
+    com.babl.robismartsales: INFO
