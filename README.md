@@ -20,6 +20,7 @@
 |10  | [When to use Redis Set data type?](#When-to-use-Redis-Set-data-type)
 |11  | [When to use Redis Sorted Set data type?](#When-to-use-Redis-Sorted-Set-data-type)
 |12  | [When to use Redis Hash data type?](#When-to-use-Redis-Hash-data-type)
+|13  | [When to use Redis over MongoDB?](#When-to-use-Redis-over-MongoDB)
 
 ## Core Message broker - Redis
 
@@ -292,6 +293,108 @@ students. In this case, the subject can be the key. The value can be a field-val
 name, and the value is the marks obtained.
 
 **[⬆ Back to Top](#table-of-contents)**
+
+13. ### When to use Redis over MongoDB?
+
+I consider the following aspects to be worth adding:
+
+> Use MongoDB if you don't know yet how you're going to query your data.
+
+MongoDB is suited for Hackathons, startups or every time you don't know how you'll query the data you inserted. MongoDB
+does not make any assumptions on your underlying schema. While MongoDB is schemaless and non-relational, this does not
+mean that there is no schema at all. It simply means that your schema needs to be defined in your app (e.g. using
+Mongoose). Besides that, MongoDB is great for prototyping or trying things out. Its performance is not that great and
+can't be compared to Redis.
+
+> Use Redis in order to speed up your existing application.
+
+Redis can be easily integrated as a LRU cache. It is very uncommon to use Redis as a standalone database system (some
+people prefer referring to it as a "key-value"-store). Websites like Craigslist use Redis next to their primary
+database. Antirez (developer of Redis) demonstrated using Lamernews that it is indeed possible to use Redis as a stand
+alone database system.
+
+> Redis does not make any assumptions based on your data.
+
+Redis provides a bunch of useful data structures (e.g. Sets, Hashes, Lists), but you have to explicitly define how you
+want to store you data. To put it in a nutshell, Redis and MongoDB can be used in order to achieve similar things. Redis
+is simply faster, but not suited for prototyping. That's one use case where you would typically prefer MongoDB. Besides
+that, Redis is really flexible. The underlying data structures it provides are the building blocks of high-performance
+DB systems.
+
+##### When to use Redis?
+
+> Caching
+
+Caching using MongoDB simply doesn't make a lot of sense. It would be too slow.
+
+> If you have enough time to think about your DB design.
+
+You can't simply throw in your documents into Redis. You have to think of the way you in which you want to store and
+organize your data. One example are hashes in Redis. They are quite different from "traditional", nested objects, which
+means you'll have to rethink the way you store nested documents. One solution would be to store a reference inside the
+hash to another hash (something like key: [id of second hash]). Another idea would be to store it as JSON, which seems
+counter-intuitive to most people with a *SQL-background.
+
+> If you need really high performance.
+
+Beating the performance Redis provides is nearly impossible. Imagine you database being as fast as your cache. That's
+what it feels like using Redis as a real database.
+
+> If you don't care that much about scaling.
+
+Scaling Redis is not as hard as it used to be. For instance, you could use a kind of proxy server in order to distribute
+the data among multiple Redis instances. Master-slave replication is not that complicated, but distributing you keys
+among multiple Redis-instances needs to be done on the application site (e.g. using a hash-function, Modulo etc.).
+Scaling MongoDB by comparison is much simpler.
+
+##### When to use MongoDB
+
+> When to use MongoDB Prototyping, Startups, Hackathons
+
+MongoDB is perfectly suited for rapid prototyping. Nevertheless, performance isn't that good. Also keep in mind that
+you'll most likely have to define some sort of schema in your application.
+
+> When you need to change your schema quickly.
+
+Because there is no schema! Altering tables in traditional, relational DBMS is painfully expensive and slow. MongoDB
+solves this problem by not making a lot of assumptions on your underlying data. Nevertheless, it tries to optimize as
+far as possible without requiring you to define a schema.
+
+TL;DR - Use Redis if performance is important , and you are willing to spend time optimizing and organizing your data. -
+Use MongoDB if you need to build a prototype without worrying too much about your DB.
+-------
+Redis is an in memory data store, that can persist it's state to disk (to enable recovery after restart). However, being
+an in-memory data store means the size of the data store (on a single node) cannot exceed the total memory space on the
+system (physical RAM + swap space). In reality, it will be much less that this, as Redis is sharing that space with many
+other processes on the system, and if it exhausts the system memory space it will likely be killed off by the operating
+system.
+
+Mongo is a disk based data store, that is most efficient when it's working set fits within physical RAM (like all
+software). Being a disk based data means there are no intrinsic limits on the size of a Mongo database, however
+configuration options, available disk space, and other concerns may mean that databases sizes over a certain limit may
+become impractical or inefficient.
+
+Both Redis and Mongo can be clustered for high availability, backup and to increase the overall size of the datastore.
+
+-------
+
+Redis and MongoDB are both non-relational databases but they're of different categories.
+
+Redis is a Key/Value database, and it's using In-memory storage which makes it super fast. It's a good candidate for
+caching stuff and temporary data storage(in memory) and as the most of cloud platforms (such as Azure,AWS) support it,
+it's memory usage is scalable.But if you're gonna use it on your machines with limited resources, consider it's memory
+usage.
+
+MongoDB on the other hand, is a document database. It's a good option for keeping large texts, images, videos, etc and
+almost anything you do with databases except transactions.For example if you wanna develop a blog or social network,
+MongoDB is a proper choice. It's scalable with scale-out strategy. It uses disk as storage media, so data would be
+persisted.
+---------
+**[⬆ Back to Top](#table-of-contents)**
+
+
+
+
 
 
 
