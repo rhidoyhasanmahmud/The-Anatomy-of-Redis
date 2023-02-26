@@ -6,33 +6,34 @@
 
 ### Table of Contents
 
-| No. | Questions |
-| --- | --------- |
-|1  | [What is Redis?](#what-is-redis)|
-|2  | [Why redis cache over Memcached and Redis Implementation?](#Why-redis-cache-over-Memcached-and-Redis-Implementation)|
-|3  | [Use cases of Redis](#Use-cases-of-Redis)|
-|4  | [Redis cache limits](#Redis-cache-limits)|
-|5  | [Is Redis just a cache?](#Is-Redis-just-a-cache)|
-|6  | [Does Redis persist data?](#Does-Redis-persist-data)|
-|7  | [What's the advantage of Redis vs using memory?](#What-is-the-advantage-of-Redis-vs-using-memory)|
-|8  | [When to use Redis Lists data type?](#When-to-use-Redis-Lists-data-type)|
-|9  | [When to use Redis String data type?](#When-to-use-Redis-String-data-type)|
-|10  | [When to use Redis Set data type?](#When-to-use-Redis-Set-data-type)|
-|11  | [When to use Redis Sorted Set data type?](#When-to-use-Redis-Sorted-Set-data-type)|
-|12  | [When to use Redis Hash data type?](#When-to-use-Redis-Hash-data-type)|
-|13  | [When to use Redis over MongoDB?](#When-to-use-Redis-over-MongoDB)|
-|14  | [How are Redis pipelining and transaction different?](How-are-Redis-pipelining-and-transaction-different)|
-|15  | [Does Redis support transactions?](#Does-Redis-support-transactions)|
-|16  | [Are redis operations on data structures thread safe?](#Are-redis-operations-on-data-structures-thread-safe)|
-|17  | [Redis replication and redis sharding (cluster) difference](#Redis-replication-and-redis-sharding-difference)|
-|18  | [What is Pipelining in Redis and when to use one?](#What-is-Pipelining-in-Redis-and-when-to-use-one)|
-|19  | [Why use cache?](#Why-use-cache)|
-|20  | [StringRedisTemplate vs RedisTemplate  vs Jedis](#StringRedisTemplate-vs-RedisTemplate-vs-Jedis)|
-|21  | [List Operation In Redis](#List-Operation-In-Redis)|
-|22  | [Hash Operation In Redis](#Hash-Operation-In-Redis)|
-|23  | [Redis Clustering in a Nutshell](#Redis-Clustering-in-a-Nutshell)|
-|24  | [Project - 01 : Redis Cache With SpringBoot Project](#Redis-Cache-With-SpringBoot)|
-|24  | [Project - 02 : Redis Cache With SpringBoot Project](#Redis-Cache-With-SpringBoot-Project)|
+| No. | Questions                                                                                                            |
+| --- | -------------------------------------------------------------------------------------------------------------------- |
+| 1   | [What is Redis?](#what-is-redis)                                                                                     |
+| 2   | [Why redis cache over Memcached and Redis Implementation?](#Why-redis-cache-over-Memcached-and-Redis-Implementation) |
+| 3   | [Use cases of Redis](#Use-cases-of-Redis)                                                                            |
+| 4   | [Redis cache limits](#Redis-cache-limits)                                                                            |
+| 5   | [Is Redis just a cache?](#Is-Redis-just-a-cache)                                                                     |
+| 6   | [Does Redis persist data?](#Does-Redis-persist-data)                                                                 |
+| 7   | [What's the advantage of Redis vs using memory?](#What-is-the-advantage-of-Redis-vs-using-memory)                    |
+| 8   | [When to use Redis Lists data type?](#When-to-use-Redis-Lists-data-type)                                             |
+| 9   | [When to use Redis String data type?](#When-to-use-Redis-String-data-type)                                           |
+| 10  | [When to use Redis Set data type?](#When-to-use-Redis-Set-data-type)                                                 |
+| 11  | [When to use Redis Sorted Set data type?](#When-to-use-Redis-Sorted-Set-data-type)                                   |
+| 12  | [When to use Redis Hash data type?](#When-to-use-Redis-Hash-data-type)                                               |
+| 13  | [When to use Redis over MongoDB?](#When-to-use-Redis-over-MongoDB)                                                   |
+| 14  | [How are Redis pipelining and transaction different?](How-are-Redis-pipelining-and-transaction-different)            |
+| 15  | [Does Redis support transactions?](#Does-Redis-support-transactions)                                                 |
+| 16  | [Are redis operations on data structures thread safe?](#Are-redis-operations-on-data-structures-thread-safe)         |
+| 17  | [Redis replication and redis sharding (cluster) difference](#Redis-replication-and-redis-sharding-difference)        |
+| 18  | [What is Pipelining in Redis and when to use one?](#What-is-Pipelining-in-Redis-and-when-to-use-one)                 |
+| 19  | [Why use cache?](#Why-use-cache)                                                                                     |
+| 20  | [StringRedisTemplate vs RedisTemplate vs Jedis](#StringRedisTemplate-vs-RedisTemplate-vs-Jedis)                      |
+| 21  | [List Operation In Redis](#List-Operation-In-Redis)                                                                  |
+| 22  | [Hash Operation In Redis](#Hash-Operation-In-Redis)                                                                  |
+| 23  | [Redis Clustering in a Nutshell](#Redis-Clustering-in-a-Nutshell)                                                    |
+| 24  | [Project - 01 : Redis Cache With SpringBoot Project](#Redis-Cache-With-SpringBoot)                                   |
+| 24  | [Project - 02 : Redis Cache With SpringBoot Project](#Redis-Cache-With-SpringBoot-Project)                           |
+| 25  | [Which is best implementation way for Redis](#Redis-Implementation-Way)                                              |
 
 ## Core Question - Redis
 
@@ -287,7 +288,7 @@ associated with a number, called a score. The elements are stored in the Set bas
 key called fruits. We need to store apple and banana as the value. Let’s say the score of apple is 10, and the score of
 banana is 15. As we can see, scoreapple
 
-```text< scorebananascoreapple<scorebanana```,
+`text< scorebananascoreapple<scorebanana`,
 
 so the order will be apple, followed by banana.
 
@@ -345,7 +346,7 @@ You can't simply throw in your documents into Redis. You have to think of the wa
 organize your data. One example are hashes in Redis. They are quite different from "traditional", nested objects, which
 means you'll have to rethink the way you store nested documents. One solution would be to store a reference inside the
 hash to another hash (something like key: [id of second hash]). Another idea would be to store it as JSON, which seems
-counter-intuitive to most people with a *SQL-background.
+counter-intuitive to most people with a \*SQL-background.
 
 > If you need really high performance.
 
@@ -375,7 +376,8 @@ far as possible without requiring you to define a schema.
 TL;DR - Use Redis if performance is important , and you are willing to spend time optimizing and organizing your data. -
 Use MongoDB if you need to build a prototype without worrying too much about your DB.
 
--------
+---
+
 Redis is an in memory data store, that can persist it's state to disk (to enable recovery after restart). However, being
 an in-memory data store means the size of the data store (on a single node) cannot exceed the total memory space on the
 system (physical RAM + swap space). In reality, it will be much less that this, as Redis is sharing that space with many
@@ -389,7 +391,7 @@ become impractical or inefficient.
 
 Both Redis and Mongo can be clustered for high availability, backup and to increase the overall size of the datastore.
 
--------
+---
 
 Redis and MongoDB are both non-relational databases but they're of different categories.
 
@@ -403,7 +405,8 @@ almost anything you do with databases except transactions.For example if you wan
 MongoDB is a proper choice. It's scalable with scale-out strategy. It uses disk as storage media, so data would be
 persisted.
 
----------
+---
+
 **[⬆ Back to Top](#table-of-contents)**
 
 14. ### How are Redis pipelining and transaction different?
@@ -458,9 +461,9 @@ to a slave, replication is master->slave only. So you cannot scale writes this w
 Suppose you have the following tuples:
 
 ```text
-[1:Apple], 
-[2:Banana], 
-[3:Cherry], 
+[1:Apple],
+[2:Banana],
+[3:Cherry],
 [4:Durian]
 ```
 
@@ -1149,7 +1152,6 @@ The replication mechanism provides basic two uses in the Redis clusters.
 
 Note that, I only took one replica scenario as an example. you can have N number of copies of your data using N-1 replicas for a master. However, if all these N nodes ( N nodes means including the master) fail, the cluster fails as well. Therefore, if you are going for a cloud solution, like AWS (Amazon Web Services), the best practice is to have a Master in one availability zone and each replica in separate availability zones.
 
-
 > Trade-off of consistency
 
 In delivering Redis’s value proposition, the Performance, it has to trade off between Performance and Consistency. Redis cannot guarantee strong Consistency, i.e. there is a possibility for a “Write” to be lost. This can happen due to two reasons: Asynchronous Replication and Network Partitioning.
@@ -1173,6 +1175,7 @@ Let take an example where A ends up alone with the client in the minority side w
 Like I mentioned before, Redis is an In-Memory database with Persistency option. So let's look at how does Redis achieves Persistency while residing in the Volatile memory.
 
 Redis achieves this in 2 ways.
+
 - RDB Mechanism
 - AOF logs
 
@@ -1196,10 +1199,10 @@ In practice, both of these methods are being used in industry; sometimes, both t
 
 > Pros and Cons
 
->> Pros
+> > Pros
 
 - Performance (Speed):
-Since Redis is In-memory, it reduces the overhead in accessing the Disk to retrieve data, since it requests from disk only when the data is not available in Redis cache.
+  Since Redis is In-memory, it reduces the overhead in accessing the Disk to retrieve data, since it requests from disk only when the data is not available in Redis cache.
 
 ![How Redis improve performance by minimizing disk reads - Image 3](https://github.com/CodeMechanix/Redis-Interview-Questions/blob/main/images/image_03.png)
 
@@ -1220,7 +1223,7 @@ According to Redis.io, there are many languages supported by the Redis including
 - Flexibility and Simplicity
 - Scalability
 
->> Cons
+> > Cons
 
 - The possibility of Data loss
 
@@ -1238,21 +1241,39 @@ According to Redis.io, there are many languages supported by the Redis including
 
 **[⬆ Back to Top](#table-of-contents)**
 
+26. ### Redis Implementation Way
+
+The best implementation way for Redis depends on the specific use case and requirements of your application. However, here are some general guidelines that can help you get started:
+
+1. Determine your data access patterns:
+   Before starting to use Redis, you should identify your data access patterns. Redis is a key-value store that allows you to store and access data based on keys. Therefore, it's essential to have a clear understanding of the data you need to store and how you'll access it.
+
+2. Choose the right data structure:
+   Redis supports a wide range of data structures, including strings, lists, sets, sorted sets, and hashes. Each data structure has its strengths and weaknesses, and choosing the right one depends on your specific use case. For example, if you need to store a simple key-value pair, a string may be the best choice. On the other hand, if you need to store a list of values that can be accessed in order, a list may be a better fit.
+
+3. Optimize for performance:
+   Redis is an in-memory data store, which means that it can handle large volumes of data at high speeds. However, to ensure optimal performance, you should design your data model and data access patterns carefully. For example, you should avoid using blocking commands or operations that require multiple roundtrips to the Redis server.
+
+4. Use Redis modules:
+   Redis modules are add-ons that extend the functionality of Redis. There are many modules available, including modules for full-text search, graph processing, and time-series data. Using modules can help you add new capabilities to your application without having to write additional code.
+
+5. Configure Redis for your environment:
+   Redis provides many configuration options that allow you to optimize the performance and reliability of your Redis deployment. You should configure Redis based on your specific environment and requirements. For example, you may want to configure Redis to use multiple CPU cores if you have a high volume of requests or to use persistence if you need to ensure that data is not lost in case of a server failure.
+
+In summary, to get the best performance and reliability out of Redis, you should choose the right data structure for your use case, optimize your data access patterns for performance, use Redis modules to extend its functionality, and configure Redis based on your environment and requirements.
+
+**[⬆ Back to Top](#table-of-contents)**
+
 ## Disclaimer
 
 The questions provided in this repository are the summary of frequently use across numerous business requirements. The primary purpose is for you to get a sense of what some companies might ask — do not get discouraged if you don't know the answer to all of them ⁠— that is ok!
 
-Furthermore, Collect Questions and Answers from Different blogs. 
+Furthermore, Collect Questions and Answers from Different blogs.
 
-Good luck with your journey.  😊
+Good luck with your journey. 😊
 
 ---
 
 ## Contact
 
 To contact:: hasan.mahmud8177@gmail.com
-
-
-
- 
-
