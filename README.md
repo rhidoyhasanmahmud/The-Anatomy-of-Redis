@@ -87,11 +87,11 @@ we need to create a connection factory bean to connect to Redis client using Jed
 factory class comes under package “org.springframework.data.redis.connection.jedis”
 
 ```java
-   @Bean
-   JedisConnectionFactory jedisConnectionFactory(){
-           RedisStandaloneConfiguration redisStandaloneConfiguration=new RedisStandaloneConfiguration("localhost",6379);
-           return new JedisConnectionFactory(redisStandaloneConfiguration);
-           }
+@Bean
+JedisConnectionFactory jedisConnectionFactory(){
+RedisStandaloneConfiguration redisStandaloneConfiguration=new RedisStandaloneConfiguration("localhost",6379);
+return new JedisConnectionFactory(redisStandaloneConfiguration);
+}
 ```
 
 Here we need to provide the Redis server configurational detail. In my case, I’m using default local configuration and
@@ -103,10 +103,10 @@ querying data with a custom repository. This class is under package: org.springf
 ```java
 @Bean
 RedisTemplate<String, User> redisTemplate(){
-        RedisTemplate<String, User> redisTemplate=new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory());
-        return redisTemplate;
-        }
+RedisTemplate<String, User> redisTemplate=new RedisTemplate<>();
+redisTemplate.setConnectionFactory(jedisConnectionFactory());
+return redisTemplate;
+}
 ```
 
 Here I’m using User detail to keep in the Redis cache. This class expect two type parameter
